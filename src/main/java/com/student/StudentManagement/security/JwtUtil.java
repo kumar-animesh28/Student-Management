@@ -36,11 +36,10 @@ public class JwtUtil {
     }
 
     public Map<String, Object> extractAllClaims(String token) {
-        Claims body = Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return body;
     }
 }
