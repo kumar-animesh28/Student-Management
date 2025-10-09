@@ -1,9 +1,6 @@
 package com.student.StudentManagement.service.impl;
 
-import com.student.StudentManagement.dto.LoginDto;
-import com.student.StudentManagement.dto.LoginResponseDto;
-import com.student.StudentManagement.dto.SignupDto;
-import com.student.StudentManagement.dto.SignupResponseDto;
+import com.student.StudentManagement.dto.*;
 import com.student.StudentManagement.entity.Student;
 import com.student.StudentManagement.repository.StudentRepository;
 import com.student.StudentManagement.security.JwtUtil;
@@ -55,5 +52,17 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtil.generateToken(claims);
 
         return new LoginResponseDto("Login Successful", token);
+    }
+
+    @Override
+    public UserProfileResponseDto getUserProfile(Map<String, Object> claims) {
+        String id = (String)claims.get("id");
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+        UserProfileResponseDto userProfileResponseDto = modelMapper.map(student, UserProfileResponseDto.class);
+        userProfileResponseDto.setMessage("Profile fetched successfully");
+
+        return userProfileResponseDto;
     }
 }
